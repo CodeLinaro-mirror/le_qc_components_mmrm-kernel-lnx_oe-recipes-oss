@@ -57,4 +57,4 @@ do_deploy() {
 
 addtask deploy after do_install before do_package
 
-FILES_${PN} += "${base_libdir}/modules/*/msm-mmrm.ko"
+FILES:${PN} += "${base_libdir}/modules/*/msm-mmrm.ko"
