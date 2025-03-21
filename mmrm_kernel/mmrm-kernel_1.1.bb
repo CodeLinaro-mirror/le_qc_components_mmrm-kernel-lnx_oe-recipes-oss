@@ -39,7 +39,7 @@ do_install() {
     install -m 0755 ${B}/driver/msm-mmrm.ko -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}
 
     ## copy Module.symvers so that other DLKM can make use of symbol of current DLKM
-    install -m 0644 ${B}/Module.symvers -D ${D}/lib/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers
+    install -m 0644 ${B}/Module.symvers -D ${D}/${base_libdir}/modules/${KERNEL_VERSION}/mmrm-kernel/Module.symvers
 }
 do_deploy() {
 # Deploy unstripped kernel modules into ${DEPLOYDIR}/kernel_modules for debugging purposes
