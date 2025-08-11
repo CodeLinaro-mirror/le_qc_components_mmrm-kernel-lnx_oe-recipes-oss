@@ -35,8 +35,8 @@ do_compile() {
 
 do_install() {
     install -m 0644 ${WORKDIR}/${BASEMACHINE}/mmrm_load.conf -D ${D}${sysconfdir}/modules-load.d/mmrm_load.conf
-    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/driver/msm-mmrm.ko -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/msm-mmrm.ko
-    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/Module.symvers -D ${D}${base_libdir}/modules/${KERNEL_VERSION}/Module.symvers
+    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/driver/msm-mmrm.ko -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/msm-mmrm.ko
+    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/Module.symvers -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/Module.symvers
 }
 
 do_deploy() {
@@ -49,4 +49,4 @@ do_deploy() {
 
 addtask deploy after do_install before do_package
 
-FILES:${PN} += "${base_libdir}/modules/${KERNEL_VERSION}/*"
+FILES:${PN} += "${nonarch_base_libdir}/modules/${KERNEL_VERSION}/*"
