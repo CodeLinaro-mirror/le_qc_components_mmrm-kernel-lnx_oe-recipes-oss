@@ -14,7 +14,7 @@ FILESPATH =. "${WORKSPACE}:"
 SRC_URI  = "file://vendor/qcom/opensource/mmrm-driver/"
 SRC_URI += "file://${BASEMACHINE}/mmrm_load.conf"
 
-S = "${WORKDIR}/vendor/qcom/opensource/mmrm-driver"
+S = "${UNPACKDIR}/vendor/qcom/opensource/mmrm-driver"
 
 EXTRA_OEMAKE += "TARGET_SUPPORT=${BASEMACHINE}"
 KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
