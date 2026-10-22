@@ -7,6 +7,9 @@ inherit linux-kernel-base deploy
 PR = "r0"
 DEPENDS = "bc-native rsync-native"
 
+DDK_BUILD ?= "false"
+OVERRIDES:append = "${@':ddk_build' if d.getVar('DDK_BUILD') == 'true' else ''}"
+
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 do_compile[cleandirs] += "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
 
@@ -23,10 +26,24 @@ EXT_MODULES = "${@os.path.relpath("${S}", "${KERNEL_PLATFORM_PATH}")}"
 
 do_compile() {
     cd ${KERNEL_PLATFORM_PATH}
-    BUILD_CONFIG=msm-kernel/${KERNEL_CONFIG} \
+    BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
     EXT_MODULES=${EXT_MODULES} \
     MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/mmrm-driver \
     INPLACE_COMPILE=y \
+    KERNEL_KIT=${KERNEL_PREBUILT_DISTDIR} \
+    OUT_DIR=${WORKDIR}/out/${KERNEL_DEFCONFIG} \
+    KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
+    ./build/build_module.sh
+}
+
+do_compile:ddk_build() {
+    cd ${KERNEL_PLATFORM_PATH}
+    ENABLE_DDK_BUILD=${DDK_BUILD} \
+    TARGET_BOARD_PLATFORM=${TARGET_BOARD_PLATFORM} \
+    VARIANT=${KERNEL_DEFCONFIG_VARIANT} \
+    BUILD_CONFIG=${KERNEL_BUILD_CONFIG} \
+    EXT_MODULES=${EXT_MODULES} \
+    MODULE_OUT=${WORKDIR}/vendor/qcom/opensource/mmrm-driver \
     KERNEL_KIT=${KERNEL_PREBUILT_PATH} \
     OUT_DIR=${WORKDIR}/out/${KERNEL_DEFCONFIG} \
     KERNEL_UAPI_HEADERS_DIR=${STAGING_KERNEL_BUILDDIR} \
@@ -34,8 +51,8 @@ do_compile() {
 }
 
 do_install() {
-    install -m 0644 ${WORKDIR}/${BASEMACHINE}/mmrm_load.conf -D ${D}${sysconfdir}/modules-load.d/mmrm_load.conf
-    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/driver/msm-mmrm.ko -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/msm-mmrm.ko
+    install -m 0644 ${UNPACKDIR}/${BASEMACHINE}/mmrm_load.conf -D ${D}${sysconfdir}/modules-load.d/mmrm_load.conf
+    install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/msm-mmrm.ko -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/msm-mmrm.ko
     install -m 0644 ${WORKDIR}/vendor/qcom/opensource/mmrm-driver/Module.symvers -D ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/Module.symvers
 }
 
