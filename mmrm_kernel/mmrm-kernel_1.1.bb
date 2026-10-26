@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171d
 inherit linux-kernel-base deploy
 
 PR = "r0"
-DEPENDS = "bc-native rsync-native"
+DEPENDS = "bc-native"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 do_compile[cleandirs] += "${WORKDIR}/out/${KERNEL_DEFCONFIG}"
